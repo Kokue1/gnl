@@ -1,17 +1,17 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   get_next_line _bonus.h                             :+:      :+:    :+:   */
+/*   get_next_line.h                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: flemos-d <flemos-d@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/02/09 17:02:47 by flemos-d          #+#    #+#             */
-/*   Updated: 2021/02/09 17:03:50 by flemos-d         ###   ########.fr       */
+/*   Updated: 2021/02/09 17:02:55 by flemos-d         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef GET_NEXT_LINE_BONUS_H
-# define GET_NEXT_LINE_BONUS_H
+#ifndef GET_NEXT_LINE_H
+# define GET_NEXT_LINE_H
 # include <stdio.h>
 # include <stdlib.h>
 # include <unistd.h>
@@ -36,10 +36,10 @@ char	*remove_after_line_break(char *final);
 
 char	*new_line_return(char *file_content, char **ret);
 
-int		get_line_break2(char *final);
-
 int		srch_break(char *search);
 
 int		ret_invalid(char **line);
+
+int		ret_func(char **f_content, char **line);
 
 #endif
