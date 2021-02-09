@@ -94,22 +94,19 @@ int	get_next_line(int fd, char **line)
 	buffer = malloc((BUFFER_SIZE + 2) * sizeof(char));
 	if (fd < 0 || !line || BUFFER_SIZE <= 0 || read(fd, 0, 0) == -1 || !buffer)
 		return (-1);
-	if (!srch_break(f_content[fd]))
+	if (!f_content[fd])
+		f_content[fd] = ft_strdup("");
+	ret = 1;
+	while (ret > 0)
 	{
-		if (!f_content[fd])
-			f_content[fd] = ft_strdup("");
-		ret = 1;
-		while (ret > 0)
-		{
-			ret = read(fd, buffer, BUFFER_SIZE);
-			buffer[ret] = '\0';
-			f_content[fd] = ft_strjoin(f_content[fd], buffer);
-			if (srch_break(f_content[fd]))
-				break ;
-		}
-		free(buffer);
-		if (ret < 0)
-			return (ret_invalid(line));
+		ret = read(fd, buffer, BUFFER_SIZE);
+		buffer[ret] = '\0';
+		f_content[fd] = ft_strjoin(f_content[fd], buffer);
+		if (srch_break(f_content[fd]))
+			break ;
 	}
+	free(buffer);
+	if (ret < 0)
+		return (ret_invalid(line));
 	return (ret_func(&f_content[fd], line));
 }
