@@ -36,10 +36,10 @@ char	*remove_after_line_break(char *final);
 
 char	*new_line_return(char *file_content, char **ret);
 
-int		get_line_break2(char *final);
-
 int		srch_break(char *search);
 
 int		ret_invalid(char **line);
+
+int		ret_func(char **f_content, char **line);
 
 #endif
