@@ -3,14 +3,14 @@
 /*                                                        :::      ::::::::   */
 /*   get_next_line_utils_bonus.c                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: flemos-d <flemos-d@student.42.fr>          +#+  +:+       +#+        */
+/*   By: kokuei <kokuei@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/02/09 17:03:04 by flemos-d          #+#    #+#             */
-/*   Updated: 2021/02/09 17:03:31 by flemos-d         ###   ########.fr       */
+/*   Updated: 2021/02/10 20:54:17 by kokuei           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include"get_next_line_bonus.h"
+#include "get_next_line_bonus.h"
 
 char	*ft_strdup(const char *s)
 {
@@ -32,22 +32,6 @@ char	*ft_strdup(const char *s)
 	}
 	dest[i] = '\0';
 	return (dest);
-}
-
-int	get_line_break(char *final)
-{
-	int	i;
-
-	i = 0;
-	if (!final)
-		return (0);
-	while (final[i] != '\n' && final[i] != '\0')
-	{
-		if (final[i] == '\n' || final[i] == '\0')
-			return (i);
-		i++;
-	}
-	return (i);
 }
 
 char	*ft_strjoin(char *s1, char const *s2)
@@ -75,7 +59,6 @@ char	*ft_strjoin(char *s1, char const *s2)
 	while (s2[b] != '\0')
 		string[i++] = s2[b++];
 	string[i] = '\0';
-	free(s1);
 	return (string);
 }
 
@@ -89,8 +72,13 @@ size_t	ft_strlen(const char *s)
 	return (i);
 }
 
-int	ret_invalid(char **line)
+char	*ft_strchr(const char *haystack, int needle)
 {
-	*line = ft_strdup("");
-	return (-1);
+	int		i;
+
+	i = -1;
+	while (haystack[++i] != needle)
+		if (haystack[i] == '\0')
+			return (NULL);
+	return ((char *)haystack + i);
 }

@@ -1,112 +1,114 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   get_next_line.c                                    :+:      :+:    :+:   */
+/*   get_next_line_bonus.c                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: flemos-d <flemos-d@student.42.fr>          +#+  +:+       +#+        */
+/*   By: kokuei <kokuei@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/02/09 17:02:35 by flemos-d          #+#    #+#             */
-/*   Updated: 2021/02/09 17:02:36 by flemos-d         ###   ########.fr       */
+/*   Updated: 2021/02/10 20:54:33 by kokuei           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "get_next_line.h"
+#include "get_next_line_bonus.h"
 
-int	srch_break(char *search)
+static void	ft_write_line(t_list *struct_, char *main_string, char **line)
 {
-	int	i;
-
-	i = 0;
-	if (!search)
-		return (0);
-	while (search[i])
-	{
-		if (search[i] == '\n')
-			return (i = 1);
-		i++;
-	}
-	return (0);
-}
-
-char	*remove_after_line_break(char *final)
-{
-	int		i;
-	int		a;
 	char	*temp;
 
-	a = 0;
-	i = get_line_break(final) + 1;
-	temp = malloc((ft_strlen(final) + 1 - i) * sizeof(char));
+	temp = ft_strdup(main_string);
+	temp[struct_->save_pos] = '\0';
+	if (temp[0] == '\0')
+		*line = ft_strdup("");
+	else
+		*line = ft_strdup(temp);
+	free(temp);
+}
+
+static int	get_new_term(t_list *struct_, char *main_string)
+{
+	struct_->save_pos = 0;
+	if (main_string[0] == '\0')
+	{
+		struct_->returnvalue = false;
+		return (0);
+	}
+	while (main_string[struct_->save_pos])
+	{
+		if (main_string[struct_->save_pos] == '\n')
+		{
+			struct_->returnvalue = true;
+			break ;
+		}
+		struct_->save_pos++;
+		struct_->returnvalue = false;
+	}
+	return (struct_->save_pos);
+}
+
+static char	*save_line_cut_str(t_list *struct_, char *main_string, char **line)
+{
+	char	*temp;
+	int		i;
+
+	i = 0;
+	struct_->save_pos = get_new_term(struct_, main_string);
+	ft_write_line(struct_, main_string, line);
+	if (main_string[struct_->save_pos] == '\0')
+	{
+		main_string[0] = '\0';
+		return (main_string);
+	}
+	struct_->save_pos += 1;
+	temp = malloc(sizeof(char ) * ft_strlen(main_string) + 1);
 	if (!temp)
 		return (NULL);
-	while (final[i] != '\0')
+	while (main_string[struct_->save_pos])
 	{
-		temp[a] = final[i];
+		temp[i] = main_string[struct_->save_pos];
+		struct_->save_pos++;
 		i++;
-		a++;
 	}
-	temp[a] = '\0';
-	free(final);
+	temp[i] = '\0';
+	free(main_string);
 	return (temp);
 }
 
-char	*new_line_return(char *file_content, char **ret)
+static char	*trade_main(t_list *struct_, char *main_string)
 {
-	int		linebreak;
 	char	*temp;
 
-	linebreak = get_line_break(file_content);
-	temp = ft_strdup(file_content);
-	temp[linebreak] = '\0';
-	*ret = ft_strdup(temp);
-	if (srch_break(file_content))
-		file_content = remove_after_line_break(file_content);
+	struct_->buffer[struct_->ret] = '\0';
+	if (!main_string)
+		main_string = ft_strdup(struct_->buffer);
 	else
 	{
-		free(file_content);
-		file_content = ft_strdup("");
+		temp = ft_strjoin(main_string, struct_->buffer);
+		free(main_string);
+		return (temp);
 	}
-	free(temp);
-	return (file_content);
-}
-
-int	ret_func(char **f_content, char **line)
-{
-	char	*ptr;
-
-	ptr = *f_content;
-	if (ptr[0] == '\0'
-		|| ptr[get_line_break(ptr)] == '\0')
-	{
-		*f_content = new_line_return(ptr, line);
-		return (0);
-	}
-	*f_content = new_line_return(ptr, line);
-	return (1);
+	return (main_string);
 }
 
 int	get_next_line(int fd, char **line)
 {
-	int			ret;
-	static char	*f_content[255];
-	char		*buffer;
+	static char	*main_string[MAX_SIZE];
+	t_list		struct_;
 
-	buffer = malloc((BUFFER_SIZE + 2) * sizeof(char));
-	if (fd < 0 || !line || BUFFER_SIZE <= 0 || read(fd, 0, 0) == -1 || !buffer)
+	struct_.buffer = malloc(sizeof(char) * BUFFER_SIZE + 1);
+	if (fd < 0 || fd == 1 || fd == 2 || line == NULL
+		|| BUFFER_SIZE <= 0 || read(fd, 0, 0) == -1 || !struct_.buffer)
 		return (-1);
-	if (!f_content[fd])
-		f_content[fd] = ft_strdup("");
-	ret = 1;
-	while (ret > 0)
+	struct_.ret = read(fd, struct_.buffer, BUFFER_SIZE);
+	main_string[fd] = trade_main(&struct_, main_string[fd]);
+	while (struct_.ret && !ft_strchr(struct_.buffer, '\n'))
 	{
-		ret = read(fd, buffer, BUFFER_SIZE);
-		buffer[ret] = '\0';
-		f_content[fd] = ft_strjoin(f_content[fd], buffer);
-		if (srch_break(f_content[fd]))
-			break ;
+		struct_.ret = read(fd, struct_.buffer, BUFFER_SIZE);
+		main_string[fd] = trade_main(&struct_, main_string[fd]);
 	}
-	free(buffer);
-	if (ret < 0)
-		return (ret_invalid(line));
-	return (ret_func(&f_content[fd], line));
+	free(struct_.buffer);
+	main_string[fd] = save_line_cut_str(&struct_, main_string[fd], line);
+	if (struct_.returnvalue)
+		return (1);
+	return (0);
 }

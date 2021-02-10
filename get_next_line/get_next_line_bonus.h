@@ -1,45 +1,52 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   get_next_line.h                                    :+:      :+:    :+:   */
+/*   get_next_line_bonus.h                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: flemos-d <flemos-d@student.42.fr>          +#+  +:+       +#+        */
+/*   By: kokuei <kokuei@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/02/09 17:02:47 by flemos-d          #+#    #+#             */
-/*   Updated: 2021/02/09 17:02:55 by flemos-d         ###   ########.fr       */
+/*   Updated: 2021/02/10 20:53:54 by kokuei           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef GET_NEXT_LINE_BONUS_H
 # define GET_NEXT_LINE_BONUS_H
+
 # include <stdio.h>
 # include <stdlib.h>
+# include <stdbool.h>
 # include <unistd.h>
 # include <sys/stat.h>
 # include <fcntl.h>
 # include <string.h>
+
 # ifndef BUFFER_SIZE
 #  define BUFFER_SIZE 1
 # endif
 
-int		get_next_line(int fd, char **line);
+# ifndef MAX_SIZE
+#  define MAX_SIZE 4096
+# endif
 
-size_t	ft_strlen(const char *s);
+typedef struct s_list
+{
+	char	*buffer;
+	int		nullterminator;
+	int		ret;
+	int		save_pos;
+	int		linebreak;
+	bool	returnvalue;
+}					t_list;
 
-char	*ft_strjoin(char *s1, char const *s2);
+int			get_next_line(int fd, char **line);
 
-int		get_line_break(char *final);
+size_t		ft_strlen(const char *s);
 
-char	*ft_strdup(const char *s);
+char		*ft_strjoin(char *s1, char const *s2);
 
-char	*remove_after_line_break(char *final);
+char		*ft_strdup(const char *s);
 
-char	*new_line_return(char *file_content, char **ret);
-
-int		srch_break(char *search);
-
-int		ret_invalid(char **line);
-
-int		ret_func(char **f_content, char **line);
+char		*ft_strchr(const char *haystack, int needle);
 
 #endif
