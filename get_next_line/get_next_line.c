@@ -6,7 +6,7 @@
 /*   By: flemos-d <flemos-d@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/02/09 17:02:35 by flemos-d          #+#    #+#             */
-/*   Updated: 2021/02/10 21:04:13 by flemos-d         ###   ########.fr       */
+/*   Updated: 2021/02/11 15:22:49 by flemos-d         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -86,7 +86,7 @@ static char	*trade_main(t_list *struct_, char *main_string)
 		temp = ft_strjoin(main_string, struct_->buffer);
 		free(main_string);
 		return (temp);
-	}flemos-d
+	}
 	return (main_string);
 }
 
