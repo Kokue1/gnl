@@ -6,7 +6,7 @@
 /*   By: flemos-d <flemos-d@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/02/09 17:02:35 by flemos-d          #+#    #+#             */
-/*   Updated: 2021/02/11 15:22:49 by flemos-d         ###   ########.fr       */
+/*   Updated: 2021/03/03 13:10:42 by flemos-d         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,7 +56,8 @@ static char	*save_line_cut_str(t_list *struct_, char *main_string, char **line)
 	ft_write_line(struct_, main_string, line);
 	if (main_string[struct_->save_pos] == '\0')
 	{
-		main_string[0] = '\0';
+		free(main_string);
+		main_string = NULL;
 		return (main_string);
 	}
 	struct_->save_pos += 1;
@@ -85,19 +86,22 @@ static char	*trade_main(t_list *struct_, char *main_string)
 	{
 		temp = ft_strjoin(main_string, struct_->buffer);
 		free(main_string);
+		main_string = NULL;
 		return (temp);
 	}
 	return (main_string);
 }
 
-int	get_next_line(int fd, char **line)
+int			get_next_line(int fd, char **line)
 {
 	static char	*main_string[MAX_SIZE];
 	t_list		struct_;
 
-	struct_.buffer = malloc(sizeof(char) * BUFFER_SIZE + 1);
 	if (fd < 0 || fd == 1 || fd == 2 || line == NULL
-		|| BUFFER_SIZE <= 0 || read(fd, 0, 0) == -1 || !struct_.buffer)
+		|| BUFFER_SIZE <= 0 || read(fd, 0, 0) == -1)
+		return (-1);
+	struct_.buffer = malloc(sizeof(char) * BUFFER_SIZE + 1);
+	if (struct_.buffer == NULL)
 		return (-1);
 	struct_.ret = read(fd, struct_.buffer, BUFFER_SIZE);
 	main_string[fd] = trade_main(&struct_, main_string[fd]);
